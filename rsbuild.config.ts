@@ -36,7 +36,9 @@ export default defineConfig({
   resolve: {
     // 配置别名
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src/renderer"),
+      "@mobx": path.resolve(__dirname, "./src/renderer/mobx"),
+      "@global": path.resolve(__dirname, "./src/renderer/global"),
     },
   },
 });

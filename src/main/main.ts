@@ -5,6 +5,7 @@ import { IGloablStore, IWebView } from "./interface.js";
 import { windowResize } from "./tools/index.js";
 import { updateMenu } from "./menu.js";
 import { autoUpdateApp } from "./update.js";
+import { globalRegister } from "./register.js";
 
 const store: IGloablStore = {
   windowList: [],
@@ -51,6 +52,7 @@ app.on("ready", () => {
   });
   store.activeWindow = `window_${id}`;
   updateMenu(store);
+  globalRegister(store);
   autoUpdateApp();
   // 监听窗口大小变化
   mainWindow.on("resize", () => {

@@ -17,7 +17,12 @@
     /* type checking */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "paths": {
+      "@/*": ["./src/renderer/*"],
+      "@mobx/*": ["./src/renderer/mobx/*"],
+      "@global/*": ["./src/renderer/store/RootStore/*"]
+    }
   },
   "include": ["src/renderer"]
 }
