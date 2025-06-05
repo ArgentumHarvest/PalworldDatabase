@@ -1,4 +1,4 @@
-import { BrowserWindow, WebContentsView } from 'electron';
+import { BrowserWindow, WebContentsView } from "electron";
 
 /** @interface 页面信息 */
 export interface IWebView {
@@ -13,6 +13,8 @@ export interface IGloablStore {
   windowList: IBrowserWindowRecord[];
   /** @param 当期展示的窗口 */
   activeWindow: string;
+  /** @param 状态栏视图 */
+  statusView: WebContentsView | null;
 }
 
 /** @interface 窗口信息 */

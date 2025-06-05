@@ -23,6 +23,7 @@ export default defineConfig({
     entry: {
       // 指定入口文件
       index: "./src/renderer/index.tsx",
+      status: "./src/renderer/diy_status/root.tsx",
     },
   },
   output: {

@@ -11,12 +11,6 @@ export const Page = function Page_() {
             <Link to="/">首页</Link>
             <Link to="/data">数据</Link>
           </div>
-          <div>
-            <Button>最小化</Button>
-            <Button>向下还原</Button>
-            <Button>最大化</Button>
-            <Button>关闭</Button>
-          </div>
         </div>
         <div className="flex-1">
           <Outlet />
