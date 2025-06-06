@@ -51,4 +51,8 @@ export const ipcServer = (store: IGloablStore) => {
     }
     app.quit();
   });
+  // 监听打开状态栏开发面板
+  ipcMain.on("OPEN_STATUS_DEV_TOOLS", (event, response) => {
+    store.statusView?.webContents.openDevTools();
+  });
 };

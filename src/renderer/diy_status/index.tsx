@@ -9,7 +9,6 @@ const DiyStatus = observer(function diy_status_() {
     () => true,
     () => {
       window.api.receive("IS_MAXIMIZE", (res) => {
-        console.log(777, res);
         root.logic.changeIsMax(!!res?.isMax);
       });
     }
@@ -17,7 +16,16 @@ const DiyStatus = observer(function diy_status_() {
 
   return (
     <div className="flex items-center justify-between h-[30px] gap-2 overflow-hidden">
-      <div className="flex-1 overflow-hidden">帕鲁百科</div>
+      <div className="flex-1 overflow-hidden flex items-center">
+        <img
+          className="status_logo"
+          src="/logo.png"
+          alt="logo"
+          width={20}
+          onClick={root.logic.addCount}
+        />
+        <span>帕鲁百科</span>
+      </div>
       <OptionRow />
     </div>
   );

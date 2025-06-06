@@ -59,5 +59,7 @@ export type TIpcEventType =
   | "RESIZE_WINDOW"
   /** @param 关闭窗口 */
   | "CLOSE_WINDOW"
+  /** @param 打开自定义状态栏的开发面板 */
+  | "OPEN_STATUS_DEV_TOOLS"
   /** @param 修改应用置顶状态 */
   | "SET_ALWAYS_ON_TOP";

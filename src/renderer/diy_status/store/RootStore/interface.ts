@@ -12,6 +12,12 @@ export interface ILogic {
   rootStore: RootStore;
   /** @param 是否最大化 */
   isMax: boolean;
+  /** @param 点击次数，达到7打开开发面板 */
+  count: number;
+  /** @param 定时器，超过500ms未点击重新计数 */
+  timer: NodeJS.Timeout | null;
+  /** @function 增加点击次数 */
+  addCount(): void;
   /** @function 修改最大化 */
   changeIsMax(isMax: boolean): void;
   /** @function 修改窗口大小 */

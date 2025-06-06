@@ -6,6 +6,13 @@ body {
   color: #88909b;
 }
 
+.status_logo {
+  -webkit-app-region: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 0 4px;
+}
+
 .status_options {
   -webkit-app-region: none;
   padding-right: 4px;
