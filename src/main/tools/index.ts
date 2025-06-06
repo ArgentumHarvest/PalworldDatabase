@@ -1,5 +1,5 @@
 import { BrowserWindow, WebContentsView, app } from "electron";
-import { IGloablStore } from "../interface.js";
+import { IGloablStore, IWebView } from "../interface.js";
 import { isDev } from "../utils.js";
 import path from "path";
 
@@ -96,18 +96,26 @@ export const createStatusView = (
 };
 
 /** @function 创建一个可视区域 */
-export const createView = (window: BrowserWindow, store: IGloablStore) => {
+export const createView = (
+  window: BrowserWindow,
+  store: IGloablStore,
+  info?: { title: string; path: string }
+) => {
   const view = new WebContentsView({
     webPreferences: store.webPreferences,
   });
   const id = Date.now();
   window.contentView.addChildView(view);
   if (isDev()) {
-    view.webContents.loadURL("http://127.0.0.1:5677");
+    const url = `http://127.0.0.1:5677/#${info?.path || ""}`;
+    view.webContents.loadURL(url);
   } else {
-    view.webContents.loadFile(
-      path.join(app.getAppPath() + "/dist/web/index.html")
-    );
+    let filePath = path.join(app.getAppPath(), "/dist/web/index.html");
+    if (info?.path && info.path !== "/") {
+      filePath = path.join(app.getAppPath(), `/dist/web${info.path}`);
+    }
+
+    view.webContents.loadFile(filePath);
   }
   const { width, height } = window.getContentBounds();
   let viewH = height - 30; // 减去状态栏的高度
@@ -126,7 +134,7 @@ export const createView = (window: BrowserWindow, store: IGloablStore) => {
   const record = {
     id: `view_${id}`,
     view: view,
-    title: "新窗口",
+    title: info?.title || "新窗口",
   };
 
   return record;
@@ -134,7 +142,7 @@ export const createView = (window: BrowserWindow, store: IGloablStore) => {
 
 /** @function 添加tab */
 export const addTab = (
-  info: { title: string; url: string },
+  info: { title: string; path: string },
   store: IGloablStore
 ) => {
   const windowRecord = store.windowList.find(
@@ -144,7 +152,7 @@ export const addTab = (
     return;
   }
 
-  const record = createView(windowRecord.window, store);
+  const record = createView(windowRecord.window, store, info);
   windowRecord.viewList.push(record);
 
   const oldView = windowRecord.viewList.find(
@@ -154,4 +162,125 @@ export const addTab = (
     oldView.view.setBounds({ x: 0, y: 0, width: 0, height: 0 });
   }
   windowRecord.activeView = record.id;
+
+  store.statusView?.webContents.send("VIEW_UPDATE", {
+    viewList: windowRecord.viewList.map((r, rIndex) => {
+      return {
+        id: r.id,
+        title: r.title,
+        isActive: r.id === windowRecord.activeView,
+        closeable: rIndex !== 0,
+      };
+    }),
+  });
+};
+
+/** @function 移除tab */
+export const removeTab = (store: IGloablStore, id: string) => {
+  const windowRecord = store.windowList.find(
+    (i) => i.id === store.activeWindow
+  );
+  if (!windowRecord) {
+    return;
+  }
+
+  const currentRecord = windowRecord.viewList.find((r) => r.id == id);
+  if (!currentRecord) {
+    return;
+  }
+
+  const newViewList = windowRecord.viewList.filter((r) => r.id !== id);
+
+  if (id === windowRecord.activeView) {
+    const nextActive = newViewList[0];
+    windowRecord.activeView = nextActive.id;
+    const { width, height } = windowRecord.window.getContentBounds();
+    let viewH = height - 30; // 减去状态栏的高度
+
+    if (viewH < 0) {
+      viewH = 0; // 确保高度不小于0
+    }
+
+    nextActive.view.setBounds({
+      x: 0,
+      y: 30,
+      width,
+      height: viewH,
+    });
+  }
+
+  windowRecord.window.contentView.removeChildView(currentRecord.view);
+  windowRecord.viewList = newViewList;
+  store.statusView?.webContents.send("VIEW_UPDATE", {
+    viewList: windowRecord.viewList.map((r, rIndex) => {
+      return {
+        id: r.id,
+        title: r.title,
+        isActive: r.id === windowRecord.activeView,
+        closeable: rIndex !== 0,
+      };
+    }),
+  });
+};
+
+/** @function 切换tab */
+export const changeTab = (store: IGloablStore, id: string) => {
+  const windowRecord = store.windowList.find(
+    (i) => i.id === store.activeWindow
+  );
+  if (!windowRecord || windowRecord.activeView === id) {
+    return;
+  }
+
+  let currentRecord: IWebView | null = null;
+  let nextRecord: IWebView | null = null;
+
+  for (let v of windowRecord.viewList) {
+    if (v.id === windowRecord.activeView) {
+      currentRecord = v;
+      continue;
+    }
+    if (v.id === id) {
+      nextRecord = v;
+      continue;
+    }
+  }
+
+  if (!currentRecord || !nextRecord) {
+    return;
+  }
+
+  const { width, height } = windowRecord.window.getContentBounds();
+  let viewH = height - 30; // 减去状态栏的高度
+
+  if (viewH < 0) {
+    viewH = 0; // 确保高度不小于0
+  }
+
+  nextRecord.view.setBounds({
+    x: 0,
+    y: 30,
+    width,
+    height: viewH,
+  });
+
+  currentRecord.view.setBounds({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  });
+
+  windowRecord.activeView = id;
+
+  store.statusView?.webContents.send("VIEW_UPDATE", {
+    viewList: windowRecord.viewList.map((r, rIndex) => {
+      return {
+        id: r.id,
+        title: r.title,
+        isActive: r.id === windowRecord.activeView,
+        closeable: rIndex !== 0,
+      };
+    }),
+  });
 };

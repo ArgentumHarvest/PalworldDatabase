@@ -2,6 +2,25 @@
 
 body {
   margin: 0;
+  color: var(--text-color);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(90deg, transparent 75%, rgba(255, 255, 255, 0.3) 75%),
+    linear-gradient(90deg, transparent 75%, rgba(255, 255, 255, 0.3) 75%),
+    radial-gradient(
+      circle at 50% 0,
+      rgba(255, 255, 255, 0.2) 10px,
+      transparent 12px
+    );
+  background-size:
+    40px 20px,
+    80px 40px,
+    40px 40px;
+  background-position:
+    0 0,
+    20px 0,
+    0 0;
+  background-repeat: repeat;
 }
 
 * {

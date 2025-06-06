@@ -51,7 +51,9 @@ export interface IPreloadApi {
 /** @type 主进程通知渲染进程的事件 */
 export type TIpcMianEventType =
   /** @param 是否为最大化 */
-  "IS_MAXIMIZE";
+  | "IS_MAXIMIZE"
+  /** @param 视图tab变化 */
+  | "VIEW_UPDATE";
 
 /** @type 渲染进程通知主进程的事件 */
 export type TIpcEventType =
@@ -62,4 +64,10 @@ export type TIpcEventType =
   /** @param 打开自定义状态栏的开发面板 */
   | "OPEN_STATUS_DEV_TOOLS"
   /** @param 修改应用置顶状态 */
-  | "SET_ALWAYS_ON_TOP";
+  | "SET_ALWAYS_ON_TOP"
+  /** @param 新增视图 */
+  | "ADD_VIEW"
+  /** @param 关闭视图 */
+  | "DELETE_VIEW"
+  /** @param 切换视图 */
+  | "CHANGE_VIEW";

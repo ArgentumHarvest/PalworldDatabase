@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import zhCN from "antd/locale/zh_CN";
 import { ConfigProvider } from "antd";
 import App from "./index";
+import "../../color.css";
 import "./index.css";
 
 const rootEl = document.getElementById("root");

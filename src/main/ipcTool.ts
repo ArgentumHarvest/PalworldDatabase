@@ -1,5 +1,6 @@
 import { app, ipcMain } from "electron";
 import { IGloablStore } from "./interface.js";
+import { addTab, changeTab, removeTab } from "./tools/index.js";
 
 /** @function 监听渲染进程的消息 */
 export const ipcServer = (store: IGloablStore) => {
@@ -54,5 +55,25 @@ export const ipcServer = (store: IGloablStore) => {
   // 监听打开状态栏开发面板
   ipcMain.on("OPEN_STATUS_DEV_TOOLS", (event, response) => {
     store.statusView?.webContents.openDevTools();
+  });
+  // 监听新增视图信息
+  ipcMain.on("ADD_VIEW", (event, response) => {
+    addTab(response, store);
+  });
+  // 关闭视图
+  ipcMain.on("DELETE_VIEW", (event, response) => {
+    if (!response.id) {
+      return;
+    }
+
+    removeTab(store, response.id);
+  });
+  // 切换视图
+  ipcMain.on("CHANGE_VIEW", (event, response) => {
+    if (!response.id) {
+      return;
+    }
+
+    changeTab(store, response.id);
   });
 };

@@ -68,6 +68,7 @@ app.on("ready", () => {
   autoUpdateApp();
   // 监听事件
   ipcServer(store);
+
   // 监听窗口大小变化
   mainWindow.on("resize", () => {
     windowResize(store);

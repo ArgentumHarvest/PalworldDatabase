@@ -1,13 +1,27 @@
 import { makeAutoObservable } from "@mobx/index";
 import { ILogic, TLoadingStore } from "./interface";
 import { RootStore } from "./";
-import { TResizeType } from "@/../interface";
+import { IVewTab, TResizeType } from "@/../interface";
 export class Logic implements ILogic {
   loadingStore: TLoadingStore;
   rootStore: RootStore;
   isMax = false;
   count = 1;
   timer: NodeJS.Timeout | null = null;
+  tabs: IVewTab[] = [
+    // {
+    //   id: "view_1749199601476",
+    //   title: "首页",
+    //   isActive: false,
+    //   closeable: false,
+    // },
+    // {
+    //   id: "view_1749199612796",
+    //   title: "首页",
+    //   isActive: true,
+    //   closeable: true,
+    // },
+  ];
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.loadingStore = rootStore.loadingStore;
@@ -17,6 +31,9 @@ export class Logic implements ILogic {
   init() {
     window.api.receive("IS_MAXIMIZE", (res) => {
       this.changeIsMax(!!res?.isMax);
+    });
+    window.api.receive("VIEW_UPDATE", (res) => {
+      this.tabs = res?.viewList || [];
     });
   }
 

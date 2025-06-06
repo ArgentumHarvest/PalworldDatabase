@@ -1,19 +1,18 @@
 import { Button } from "antd";
+import { useState } from "react";
 
 export const Page = function Page_() {
+  const [count, setCount] = useState(0);
+
   return (
     <div>
+      <div>{count}</div>
       <Button
         onClick={() => {
-          console.log(777);
-          window.api.send("RESIZE_WINDOW", {
-            data: {
-              small: true,
-            },
-          });
+          setCount((d) => d + 1);
         }}
       >
-        试一试
+        +1
       </Button>
     </div>
   );

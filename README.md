@@ -22,7 +22,7 @@ electron    v35.5.1
 ```bash
 # 安装依赖
 pnpm install
-# 允许项目
+# 运行项目
 pnpm dev
 # 可选-打包项目 产物在dist目录下
 pnpm build

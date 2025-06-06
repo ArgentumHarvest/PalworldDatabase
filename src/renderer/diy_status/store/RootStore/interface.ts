@@ -2,7 +2,7 @@ import { LoadingStore } from "@mobx/index";
 import { RootStore } from "./";
 import { Logic } from "./Logic";
 import { Computed } from "./Computed";
-import { TResizeType } from "../../../../interface";
+import { IVewTab, TResizeType } from "../../../../interface";
 
 export type TLoadingStore = LoadingStore<"loading">;
 
@@ -16,6 +16,8 @@ export interface ILogic {
   count: number;
   /** @param 定时器，超过500ms未点击重新计数 */
   timer: NodeJS.Timeout | null;
+  /** @param 标签页 */
+  tabs: IVewTab[];
   /** @function 增加点击次数 */
   addCount(): void;
   /** @function 修改最大化 */
