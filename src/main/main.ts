@@ -1,8 +1,7 @@
-import { app, BrowserWindow, WebContentsView } from "electron";
+import { app, BrowserWindow } from "electron";
 import path from "path";
-import { isDev } from "./utils.js";
-import { IGloablStore, IWebView } from "./interface.js";
-import { windowResize } from "./tools/index.js";
+import { IGloablStore } from "./interface.js";
+import { createStatusView, createView, windowResize } from "./tools/index.js";
 import { autoUpdateApp } from "./update.js";
 import { globalRegister } from "./register.js";
 import { fileURLToPath } from "url";
@@ -15,91 +14,62 @@ const store: IGloablStore = {
 };
 
 app.on("ready", () => {
-  const width = 400;
-  const height = 400;
+  // 创建主窗口
   const mainWindow = new BrowserWindow({
-    width: width,
-    height: height,
+    width: 400,
+    height: 400,
     title: "OA",
+    // 隐藏状态栏
     frame: false,
+    // 隐藏菜单栏
     autoHideMenuBar: true,
   });
-  const szie = mainWindow.getContentBounds();
-  const viewList: IWebView[] = [];
-
+  //
   store.webPreferences = {
-    nodeIntegrationInSubFrames: true,
-    nodeIntegrationInWorker: true,
+    // 预加载脚本
     preload: path.join(
       path.dirname(fileURLToPath(import.meta.url)),
       "preload.mjs"
     ),
+    // 启用上下文隔离
     contextIsolation: true,
-    nodeIntegration: true,
+    // 禁止渲染进程使用nodejs
+    nodeIntegration: false,
+    // 是否启用沙盒模式，启用后更贴近浏览器模式
     sandbox: false,
-    additionalArguments: ["--csp=script-src 'self'"],
   };
+
   // 自定义状态栏
+  createStatusView(mainWindow, store);
 
-  const statusView = new WebContentsView({
-    webPreferences: store.webPreferences,
-  });
+  // 展示的内容
+  const record = createView(mainWindow, store);
+  const window_id = `window_${Date.now()}`;
 
-  mainWindow.contentView.addChildView(statusView);
-  if (isDev()) {
-    statusView.webContents.loadURL("http://127.0.0.1:5677/status");
-  } else {
-    statusView.webContents.loadFile(
-      path.join(app.getAppPath() + "/dist/web/status.html")
-    );
+  const { width, height } = mainWindow.getContentBounds();
+  let contentHeight = height - 30;
+  if (contentHeight < 0) {
+    contentHeight = 0;
   }
-
-  statusView.setBounds({ x: 0, y: 0, width: szie.width, height: 30 });
-
-  store.statusView = statusView;
-
-  const view1 = new WebContentsView({
-    webPreferences: store.webPreferences,
-  });
-  const id = Date.now();
-  viewList.push({
-    id: `view_${id}`,
-    view: view1,
-    title: "OA",
-  });
-  mainWindow.contentView.addChildView(view1);
-
-  if (isDev()) {
-    view1.webContents.loadURL("http://127.0.0.1:5677");
-  } else {
-    view1.webContents.loadFile(
-      path.join(app.getAppPath() + "/dist/web/index.html")
-    );
-  }
-
-  let viewH = szie.height - 30;
-  if (viewH < 0) {
-    viewH = 0;
-  }
-
-  view1.setBounds({ x: 0, y: 30, width: szie.width, height: viewH });
-
   store.windowList.push({
     window: mainWindow,
-    id: `window_${id}`,
+    id: window_id,
     visible: true,
-    viewList,
-    activeView: `view_${id}`,
+    viewList: [record],
+    activeView: record.id,
     width,
     height,
+    contentHeight,
   });
-  store.activeWindow = `window_${id}`;
+  store.activeWindow = window_id;
+  // 注册快捷键
   globalRegister(store);
+  // 自动更新
   autoUpdateApp();
+  // 监听事件
   ipcServer(store);
   // 监听窗口大小变化
   mainWindow.on("resize", () => {
-    const { width, height } = mainWindow.getContentBounds();
-    windowResize(width, height, store);
+    windowResize(store);
   });
 });

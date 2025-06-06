@@ -33,8 +33,10 @@ export interface IBrowserWindowRecord {
   activeView: string;
   /** @param 窗口宽度 */
   width: number;
-  /** @param 窗口高度 */
+  /** @param 窗口可视区域高度 */
   height: number;
+  /** @param 窗口内容可用高度-去除状态栏 */
+  contentHeight: number;
 }
 
 export interface IPreloadApi {

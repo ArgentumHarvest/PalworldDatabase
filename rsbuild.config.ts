@@ -17,6 +17,14 @@ export default defineConfig({
           lang: "zh-CN",
         },
       },
+      {
+        tag: "meta",
+        attrs: {
+          // 给meta添加charset=utf-8属性
+          "http-equiv": "Content-Security-Policy",
+          content: "script-src 'self'; object-src 'none'",
+        },
+      },
     ],
   },
   source: {
