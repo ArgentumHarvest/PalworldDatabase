@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS", // <- 关键在这里
+    "outDir": "../../dist/app",
+    "skipLibCheck": true
+  },
+  "include": ["./preload.mts"]
+}

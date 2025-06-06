@@ -7,5 +7,6 @@
     "skipLibCheck": true,
     "moduleResolution": "NodeNext"
   },
-  "include": ["./**/*.ts", "./**/*.tsx"]
+  "include": ["./**/*.ts", "./**/*.tsx"],
+  "exclude": ["./preload.ts"]
 }

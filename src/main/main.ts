@@ -5,6 +5,8 @@ import { IGloablStore, IWebView } from "./interface.js";
 import { windowResize } from "./tools/index.js";
 import { autoUpdateApp } from "./update.js";
 import { globalRegister } from "./register.js";
+import { fileURLToPath } from "url";
+import { ipcServer } from "./ipcTool.js";
 
 const store: IGloablStore = {
   windowList: [],
@@ -25,9 +27,24 @@ app.on("ready", () => {
   const szie = mainWindow.getContentBounds();
   const viewList: IWebView[] = [];
 
+  store.webPreferences = {
+    nodeIntegrationInSubFrames: true,
+    nodeIntegrationInWorker: true,
+    preload: path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "preload.mjs"
+    ),
+    contextIsolation: true,
+    nodeIntegration: true,
+    sandbox: false,
+    additionalArguments: ["--csp=script-src 'self'"],
+  };
   // 自定义状态栏
 
-  const statusView = new WebContentsView();
+  const statusView = new WebContentsView({
+    webPreferences: store.webPreferences,
+  });
+
   mainWindow.contentView.addChildView(statusView);
   if (isDev()) {
     statusView.webContents.loadURL("http://127.0.0.1:5677/status");
@@ -41,7 +58,9 @@ app.on("ready", () => {
 
   store.statusView = statusView;
 
-  const view1 = new WebContentsView();
+  const view1 = new WebContentsView({
+    webPreferences: store.webPreferences,
+  });
   const id = Date.now();
   viewList.push({
     id: `view_${id}`,
@@ -77,6 +96,7 @@ app.on("ready", () => {
   store.activeWindow = `window_${id}`;
   globalRegister(store);
   autoUpdateApp();
+  ipcServer(store);
   // 监听窗口大小变化
   mainWindow.on("resize", () => {
     const { width, height } = mainWindow.getContentBounds();

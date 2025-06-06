@@ -1,4 +1,4 @@
-import { BrowserWindow, WebContentsView } from "electron";
+import { BrowserWindow, WebContentsView, WebPreferences } from "electron";
 
 /** @interface 页面信息 */
 export interface IWebView {
@@ -15,6 +15,8 @@ export interface IGloablStore {
   activeWindow: string;
   /** @param 状态栏视图 */
   statusView: WebContentsView | null;
+  /** @param 配置信息 */
+  webPreferences?: WebPreferences;
 }
 
 /** @interface 窗口信息 */
@@ -34,3 +36,30 @@ export interface IBrowserWindowRecord {
   /** @param 窗口高度 */
   height: number;
 }
+
+export interface IPreloadApi {
+  /** @param 渲染进程向主进程发送消息 */
+  send: (channel: TIpcEventType, ...args: any) => void;
+  /** @param 渲染进程向主进程发送消息 */
+  invoke: (channel: TIpcEventType, ...args: any) => any;
+  /** @param 用于渲染进程监听主进程发出的消息 */
+  receive: (channel: TIpcMianEventType, func: (...args: any) => void) => void;
+}
+
+/** @type 主进程通知渲染进程的事件 */
+export type TIpcMianEventType =
+  /** @param 跳转页面 */
+  "NAVIGATE";
+
+/** @type 渲染进程通知主进程的事件 */
+export type TIpcEventType =
+  /** @param 返回页面跳转结果 */
+  | "NAVIGATE_RESPONSE"
+  /** @param 修改窗口大小 */
+  | "RESIZE_WINDOW"
+  /** @param 修改菜单显示状态 */
+  | "CHANGE_MENU_VISIBLE"
+  /** @param 修改应用置顶状态 */
+  | "SET_ALWAYS_ON_TOP"
+  /** @param 将文件写入doc并保存到本地 */
+  | "WRITE_DATA_TO_DOC";
