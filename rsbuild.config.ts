@@ -25,6 +25,14 @@ export default defineConfig({
           content: "script-src 'self'; object-src 'none'",
         },
       },
+      {
+        tag: "link",
+        attrs: { href: "/font/iconfont.css", rel: "stylesheet" },
+        head: true,
+        append: true,
+        publicPath: true,
+        hash: true,
+      },
     ],
   },
   source: {

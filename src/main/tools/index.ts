@@ -89,6 +89,8 @@ export const createStatusView = (
       path.join(app.getAppPath() + "/dist/web/status.html")
     );
   }
+
+  statusView.webContents.openDevTools();
   const { width } = window.getContentBounds();
   statusView.setBounds({ x: 0, y: 0, width, height: 30 });
   store.statusView = statusView;

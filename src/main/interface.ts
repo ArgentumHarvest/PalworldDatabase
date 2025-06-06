@@ -50,18 +50,14 @@ export interface IPreloadApi {
 
 /** @type 主进程通知渲染进程的事件 */
 export type TIpcMianEventType =
-  /** @param 跳转页面 */
-  "NAVIGATE";
+  /** @param 是否为最大化 */
+  "IS_MAXIMIZE";
 
 /** @type 渲染进程通知主进程的事件 */
 export type TIpcEventType =
-  /** @param 返回页面跳转结果 */
-  | "NAVIGATE_RESPONSE"
   /** @param 修改窗口大小 */
   | "RESIZE_WINDOW"
-  /** @param 修改菜单显示状态 */
-  | "CHANGE_MENU_VISIBLE"
+  /** @param 关闭窗口 */
+  | "CLOSE_WINDOW"
   /** @param 修改应用置顶状态 */
-  | "SET_ALWAYS_ON_TOP"
-  /** @param 将文件写入doc并保存到本地 */
-  | "WRITE_DATA_TO_DOC";
+  | "SET_ALWAYS_ON_TOP";

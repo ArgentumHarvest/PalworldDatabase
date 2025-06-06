@@ -24,7 +24,7 @@ app.on("ready", () => {
     // 隐藏菜单栏
     autoHideMenuBar: true,
   });
-  //
+
   store.webPreferences = {
     // 预加载脚本
     preload: path.join(
@@ -71,5 +71,9 @@ app.on("ready", () => {
   // 监听窗口大小变化
   mainWindow.on("resize", () => {
     windowResize(store);
+    const isMax = mainWindow.isMaximized();
+    store.statusView?.webContents.send("IS_MAXIMIZE", {
+      isMax,
+    });
   });
 });

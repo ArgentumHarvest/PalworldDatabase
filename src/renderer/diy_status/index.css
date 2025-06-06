@@ -3,6 +3,31 @@
 body {
   margin: 0;
   -webkit-app-region: drag;
+  color: #88909b;
+}
+
+.status_options {
+  -webkit-app-region: none;
+  padding-right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status_option_item {
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.status_option_item:hover {
+  background-color: #e5e5e5;
+}
+
+.status_option_item.close-icon:hover {
+  background-color: rgb(228, 92, 68);
+  color: white;
 }
 
 * {
