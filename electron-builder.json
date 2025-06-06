@@ -1,6 +1,6 @@
 {
   "appId": "com.q.desktop.app",
-  "icon": "./icon.png",
+  "icon": "./public/icon.png",
   "files": ["dist/app", "dist/web"],
   "mac": {
     "target": "dmg"
@@ -10,10 +10,11 @@
     "category": "Utility"
   },
   "win": {
-    "target": ["nsis"] ,
+    "target": ["nsis"],
     "publish": {
       "provider": "generic",
       "url": "http://localhost:9071/packages/win32/"
-    }
+    },
+    "icon": "./public/icon.ico"
   }
 }
