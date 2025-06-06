@@ -16,7 +16,7 @@
     "translate:preload": "tsc --project src/main/tsconfig.preload.json",
     "translate:electron": "tsc --project src/main/tsconfig.json",
     "package:mac": "npm run translate:electron && npm run build:web && electron-builder --mac --arm64",
-    "package": "npm run translate:electron && npm run build:web && electron-builder --publish never",
+    "package": "npm run translate:preload && npm run translate:electron && npm run build:web && electron-builder --publish never",
     "package:linux": "npm run translate:electron && npm run build:web && electron-builder --linux --x64"
   },
   "dependencies": {
