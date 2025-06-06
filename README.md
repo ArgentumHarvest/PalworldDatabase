@@ -14,3 +14,16 @@ electron    v35.5.1
 ```
 
 - `update_local_server` 更新服务器模拟
+
+## 允许步骤
+
+在上述开发环境下，执行以下命令
+
+```bash
+# 安装依赖
+pnpm install
+# 允许项目
+pnpm dev
+# 可选-打包项目 产物在dist目录下
+pnpm build
+```
