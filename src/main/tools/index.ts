@@ -110,12 +110,13 @@ export const createView = (
     const url = `http://127.0.0.1:5677/#${info?.path || ""}`;
     view.webContents.loadURL(url);
   } else {
-    let filePath = path.join(app.getAppPath(), "/dist/web/index.html");
+    const filePath = path.join(app.getAppPath(), "/dist/web/index.html");
+    // 如果有路径信息，附加到URL的hash部分
+    let url = `file://${filePath}`;
     if (info?.path && info.path !== "/") {
-      filePath = path.join(app.getAppPath(), `/dist/web${info.path}`);
+      url += `#${info.path.startsWith("/") ? info.path.slice(1) : info.path}`;
     }
-
-    view.webContents.loadFile(filePath);
+    view.webContents.loadURL(url);
   }
   const { width, height } = window.getContentBounds();
   let viewH = height - 30; // 减去状态栏的高度
