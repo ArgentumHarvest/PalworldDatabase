@@ -17,7 +17,7 @@ const DiyStatus = observer(function diy_status_() {
       <div className="flex-1 overflow-hidden flex items-center">
         <img
           className="status_logo"
-          src="/logo.png"
+          src="./logo.png"
           alt="logo"
           width={20}
           draggable={false}

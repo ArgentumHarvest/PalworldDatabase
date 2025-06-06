@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { HashRouter, Route, Routes } from "react-router";
 import { IRouteItem, routes } from "./router/router-list";
 import React from "react";
 import Auth from "./router/auth";
@@ -43,9 +43,9 @@ const App = observer(() => {
   );
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>{loopRoute(routes)}</Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 });
 
