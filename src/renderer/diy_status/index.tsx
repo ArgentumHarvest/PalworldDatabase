@@ -6,11 +6,9 @@ const DiyStatus = observer(function diy_status_() {
   const root = useStore();
 
   useWhen(
-    () => true,
+    () => !!root.logic.init,
     () => {
-      window.api.receive("IS_MAXIMIZE", (res) => {
-        root.logic.changeIsMax(!!res?.isMax);
-      });
+      root.logic.init();
     }
   );
 
@@ -22,6 +20,7 @@ const DiyStatus = observer(function diy_status_() {
           src="/logo.png"
           alt="logo"
           width={20}
+          draggable={false}
           onClick={root.logic.addCount}
         />
         <span>帕鲁百科</span>

@@ -14,12 +14,19 @@ export class Logic implements ILogic {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
+  init() {
+    window.api.receive("IS_MAXIMIZE", (res) => {
+      this.changeIsMax(!!res?.isMax);
+    });
+  }
+
   addCount() {
     this.count += 1;
     if (this.timer) {
       clearTimeout(this.timer);
     }
     if (this.count > 7) {
+      this.count = 0;
       window.api.send("OPEN_STATUS_DEV_TOOLS");
       return;
     }
