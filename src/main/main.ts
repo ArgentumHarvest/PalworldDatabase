@@ -6,6 +6,7 @@ import { autoUpdateApp } from "./update.js";
 import { globalRegister } from "./register.js";
 import { fileURLToPath } from "url";
 import { ipcServer } from "./ipcTool.js";
+import { updateMenu } from "./menu.js";
 
 const store: IGloablStore = {
   windowList: [],
@@ -14,67 +15,112 @@ const store: IGloablStore = {
 };
 
 app.on("ready", () => {
+  console.log("222-ready");
   // 创建主窗口
   const mainWindow = new BrowserWindow({
     width: 400,
     height: 400,
     title: "OA",
-    // 隐藏状态栏
-    frame: false,
-    // 隐藏菜单栏
-    autoHideMenuBar: true,
   });
 
-  store.webPreferences = {
-    // 预加载脚本
-    preload: path.join(
-      path.dirname(fileURLToPath(import.meta.url)),
-      "preload.mjs"
-    ),
-    // 启用上下文隔离
-    contextIsolation: true,
-    // 禁止渲染进程使用nodejs
-    nodeIntegration: false,
-    // 是否启用沙盒模式，启用后更贴近浏览器模式
-    sandbox: false,
-  };
+  mainWindow.webContents.loadURL("https://liuqi.cool/");
 
-  // 自定义状态栏
-  createStatusView(mainWindow, store);
+  updateMenu(store);
+});
 
-  // 展示的内容
-  const record = createView(mainWindow, store);
-  const window_id = `window_${Date.now()}`;
+app.on("window-all-closed", () => {
+  console.log("333-window-all-closed");
+  app.quit();
+});
 
-  const { width, height } = mainWindow.getContentBounds();
-  let contentHeight = height - 30;
-  if (contentHeight < 0) {
-    contentHeight = 0;
+app.on("will-finish-launching", () => {
+  console.log("111-will-finish-launching");
+});
+
+app.on("before-quit", (e) => {
+  console.log("444-before-quit");
+});
+app.on("will-quit", (e) => {
+  console.log("555-will-quit");
+});
+app.on("quit", (e, c) => {
+  console.log("666-quit", e, c);
+});
+app.on("browser-window-blur", (e, c) => {
+  console.log("777-browser-window-blur", e, c.id);
+});
+app.on("browser-window-focus", (e, c) => {
+  console.log("888-browser-window-blur", e, c.id);
+});
+app.on("browser-window-created", (e, c) => {
+  console.log("999-browser-window-created", e, c.id);
+});
+app.on("web-contents-created", (e, c) => {
+  console.log("101010-web-contents-created", c.id);
+});
+app.on(
+  "certificate-error",
+  (e, wc, url, error, certificate, callback, isMainFrame) => {
+    console.log(
+      "111111-certificate-error",
+      e,
+      wc.id,
+      url,
+      error,
+      certificate,
+      callback,
+      isMainFrame
+    );
   }
-  store.windowList.push({
-    window: mainWindow,
-    id: window_id,
-    visible: true,
-    viewList: [record],
-    activeView: record.id,
-    width,
-    height,
-    contentHeight,
-  });
-  store.activeWindow = window_id;
-  // 注册快捷键
-  globalRegister(store);
-  // 自动更新
-  autoUpdateApp();
-  // 监听事件
-  ipcServer(store);
-
-  // 监听窗口大小变化
-  mainWindow.on("resize", () => {
-    windowResize(store);
-    const isMax = mainWindow.isMaximized();
-    store.statusView?.webContents.send("IS_MAXIMIZE", {
-      isMax,
-    });
-  });
+);
+app.on("select-client-certificate", (e, wc, url, certificate, callback) => {
+  console.log(
+    "121212-select-client-certificate",
+    e,
+    wc.id,
+    url,
+    certificate,
+    callback
+  );
+});
+app.on("login", (e, wc, authenticationResponseDetails, authInfo, callback) => {
+  console.log(
+    "131313-select-client-certificate",
+    e,
+    wc.id,
+    authenticationResponseDetails,
+    authInfo,
+    callback
+  );
+});
+app.on("gpu-info-update", () => {
+  console.log("141414-gpu-info-update");
+});
+app.on("render-process-gone", (event, webContents, details) => {
+  console.log("151515-render-process-gone", event, webContents, details);
+});
+app.on("child-process-gone", (event, details) => {
+  console.log("161616-child-process-gone", event, details);
+});
+app.on(
+  "accessibility-support-changed",
+  (event, accessibilitySupportEnabled) => {
+    console.log(
+      "171717-accessibility-support-changed",
+      event,
+      accessibilitySupportEnabled
+    );
+  }
+);
+app.on("session-created", (session) => {
+  console.log("181818-session-created", session);
+});
+app.on("second-instance", (event, argv, workingDirectory, additionalData) => {
+  console.log(
+    "1919-session-instance",
+    event,
+    argv,
+    workingDirectory,
+    additionalData
+  );
 });

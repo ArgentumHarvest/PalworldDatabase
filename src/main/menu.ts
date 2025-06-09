@@ -1,4 +1,4 @@
-import { Menu, MenuItemConstructorOptions } from "electron";
+import { app, Menu, MenuItemConstructorOptions } from "electron";
 import { IGloablStore } from "./interface.js";
 import { addTab, switchTab } from "./tools/index.js";
 
@@ -8,6 +8,24 @@ export const updateMenu = (store: IGloablStore) => {
     (w) => w.id === store.activeWindow
   );
   const template: MenuItemConstructorOptions[] = [
+    {
+      label: "退出",
+      click: () => {
+        app.quit();
+      },
+    },
+    {
+      label: "强行退出",
+      click: () => {
+        app.exit(1);
+      },
+    },
+    {
+      label: "重启",
+      click: () => {
+        app.relaunch();
+      },
+    },
     {
       label: "【新增窗口】",
       click: () => {
