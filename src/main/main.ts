@@ -14,6 +14,10 @@ const store: IGloablStore = {
   statusView: null,
 };
 
+app.whenReady().then((res) => {
+  console.log("======app.whenReady======", res);
+});
+
 app.on("ready", () => {
   console.log("222-ready");
   // 创建主窗口
@@ -24,6 +28,20 @@ app.on("ready", () => {
   });
 
   mainWindow.webContents.loadURL("https://liuqi.cool/");
+  const mainWindow2 = new BrowserWindow({
+    width: 400,
+    height: 400,
+    title: "OA2",
+  });
+
+  mainWindow2.webContents.loadURL("https://liuqi.cool/");
+  const mainWindow3 = new BrowserWindow({
+    width: 400,
+    height: 400,
+    title: "OA2",
+  });
+
+  mainWindow3.webContents.loadURL("https://liuqi.cool/");
 
   updateMenu(store);
 });
@@ -50,7 +68,7 @@ app.on("browser-window-blur", (e, c) => {
   console.log("777-browser-window-blur", e, c.id);
 });
 app.on("browser-window-focus", (e, c) => {
-  console.log("888-browser-window-blur", e, c.id);
+  console.log("888-browser-window-focus", e, c.id);
 });
 app.on("browser-window-created", (e, c) => {
   console.log("999-browser-window-created", e, c.id);

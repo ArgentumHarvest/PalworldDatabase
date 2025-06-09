@@ -27,6 +27,25 @@ export const updateMenu = (store: IGloablStore) => {
       },
     },
     {
+      label: "聚焦",
+      click: () => {
+        app.focus();
+      },
+    },
+    {
+      label: "隐藏所有窗口",
+      click: () => {
+        app.hide();
+      },
+    },
+    {
+      label: "是否初始化完成",
+      click: () => {
+        const res = app.isReady();
+        console.log("app.isReady:", res);
+      },
+    },
+    {
       label: "【新增窗口】",
       click: () => {
         addTab(
