@@ -4,6 +4,7 @@
   --bg-light: #eee;
   --bg-mask: rgba(255, 255, 255, 0.1);
   --bg-mask-2: rgba(255, 255, 255, 0.2);
+  --bg-d-mask-5: rgba(0, 0, 0, 0.5);
   --side-bg: #373c41;
   --danger-bg: rgb(228, 92, 68);
   --text-color: rgba(255, 255, 255, 0.55);

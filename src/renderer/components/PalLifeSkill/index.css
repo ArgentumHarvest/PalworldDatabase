@@ -1,0 +1,14 @@
+.c-pal-life-skill {
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.c-pal-life-skill .icon {
+  width: 20px;
+  height: 20px;
+  background-size: 200px auto;
+}

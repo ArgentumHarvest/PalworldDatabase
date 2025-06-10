@@ -26,3 +26,18 @@ body {
 * {
   box-sizing: border-box;
 }
+
+::-webkit-scrollbar,
+.ant-table-tbody-virtual-scrollbar {
+  width: 10px; /* 纵向滚动条*/
+  height: 10px; /* 横向滚动条 */
+  background-color: var(--bg-hover);
+  opacity: 0.8;
+}
+
+::-webkit-scrollbar-thumb,
+.ant-table-tbody-virtual-scrollbar-thumb {
+  background-color: var(--bg) !important;
+  border-radius: 10px;
+  opacity: 0.8;
+}
