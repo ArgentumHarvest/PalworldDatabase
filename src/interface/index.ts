@@ -7,7 +7,11 @@ export type TResizeType =
   /** @param 取消最大化 */
   | "unmaximize"
   /** @param 最大化 */
-  | "maximize";
+  | "maximize"
+  /** @param 置顶 */
+  | "setAlwaysOnTop"
+  /** @param 取消置顶 */
+  | "cancelSetAlwaysOnTop";
 
 /** @interface 视图tab定义 */
 export interface IVewTab {
@@ -37,6 +41,8 @@ export interface IPalRecord {
   attrs: TAttr[];
   /** @param 生活技能 */
   lifeSkill: ILifeSkillRecord[];
+  /** @param 搜索字符串 */
+  searchText: string;
 }
 
 /** @interface 生活技能 */
@@ -45,4 +51,11 @@ export interface ILifeSkillRecord {
   type: TLifeSkill;
   /** @param 技能等级 */
   lv: number;
+}
+
+/** @interface 筛选项 */
+export interface IOption {
+  label: string;
+  value: string;
+  [key: string]: any;
 }

@@ -1,7 +1,7 @@
 import Layout from "@/layout";
 import { Page404 } from "@/pages/Page404";
-
 import { JSX, lazy } from "react";
+
 export interface IRouteItem {
   /** @param 路径 */
   path?: string;

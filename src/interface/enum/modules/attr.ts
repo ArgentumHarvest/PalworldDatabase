@@ -1,6 +1,6 @@
 // 用户类型
 
-import { configToTagObj, configToTagObjReversal } from "..";
+import { configToOption, configToTagObj, configToTagObjReversal } from "..";
 
 // 原始定义
 const config = {
@@ -17,6 +17,8 @@ const config = {
 
 // 类型
 export type TAttr = keyof typeof config;
+
+export const attrOptions = configToOption(config);
 
 // 标签展示数据源
 export const attrObj = configToTagObj(config);

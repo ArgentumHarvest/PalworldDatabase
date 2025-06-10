@@ -31,6 +31,16 @@ export const ipcServer = (store: IGloablStore) => {
           windowRecord.window.minimize();
         }
         break;
+      case "setAlwaysOnTop":
+        {
+          windowRecord.window.setAlwaysOnTop(true);
+        }
+        break;
+      case "cancelSetAlwaysOnTop":
+        {
+          windowRecord.window.setAlwaysOnTop(false);
+        }
+        break;
     }
   });
   // 监听窗口关闭的消息

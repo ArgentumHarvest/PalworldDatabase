@@ -6,22 +6,10 @@ export class Logic implements ILogic {
   loadingStore: TLoadingStore;
   rootStore: RootStore;
   isMax = false;
+  isTop = false;
   count = 1;
   timer: NodeJS.Timeout | null = null;
-  tabs: IVewTab[] = [
-    // {
-    //   id: "view_1749199601476",
-    //   title: "首页",
-    //   isActive: false,
-    //   closeable: false,
-    // },
-    // {
-    //   id: "view_1749199612796",
-    //   title: "首页",
-    //   isActive: true,
-    //   closeable: true,
-    // },
-  ];
+  tabs: IVewTab[] = [];
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.loadingStore = rootStore.loadingStore;
@@ -31,6 +19,9 @@ export class Logic implements ILogic {
   init() {
     window.api.receive("IS_MAXIMIZE", (res) => {
       this.changeIsMax(!!res?.isMax);
+    });
+    window.api.receive("IS_ON_TOP", (res) => {
+      this.changeIsTop(!!res?.isAlwaysOnTop);
     });
     window.api.receive("VIEW_UPDATE", (res) => {
       this.tabs = res?.viewList || [];
@@ -54,6 +45,10 @@ export class Logic implements ILogic {
 
   changeIsMax(isMax: boolean) {
     this.isMax = isMax;
+  }
+
+  changeIsTop(isTop: boolean) {
+    this.isTop = isTop;
   }
 
   resize(type: TResizeType) {

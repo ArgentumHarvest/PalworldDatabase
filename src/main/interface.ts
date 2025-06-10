@@ -52,6 +52,8 @@ export interface IPreloadApi {
 export type TIpcMianEventType =
   /** @param 是否为最大化 */
   | "IS_MAXIMIZE"
+  /** @param 是否置顶 */
+  | "IS_ON_TOP"
   /** @param 视图tab变化 */
   | "VIEW_UPDATE";
 

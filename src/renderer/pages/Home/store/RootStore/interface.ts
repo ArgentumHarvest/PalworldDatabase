@@ -13,8 +13,22 @@ export interface ILogic {
   rootStore: RootStore;
   /** @param 帕鲁信息 */
   dataSource: IPalRecord[];
+  /** @param 搜索内容 */
+  searchVal: string;
+  /** @param 全部的内容index */
+  indexList: number[];
+  /** @param 需要展示的内容index */
+  showIndexSet: Set<number>;
+  /** @function 清空搜索参数 */
+  onClear(): void;
+  /** @function 搜索 */
+  toSearch: () => void;
+  /** @function 修改搜索内容 */
+  changeSearchVal(v?: string): void;
   /** @function 数据初始化 */
   init(): void;
+  /** @function 快捷搜索 */
+  selectLabel(text: string): void;
 }
 
 /** 计算属性接口 */

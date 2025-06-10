@@ -1,14 +1,14 @@
-import { Tooltip } from "antd";
 import { attrObj, TAttr } from "../../../interface/enum/modules/attr";
 import "./index.css";
 
 export interface IPalAttrProps {
   type: TAttr;
   className?: string;
+  onClick?: () => void;
 }
 
-export const PalAttr = function PalAttr_(props: IPalAttrProps) {
-  const { type, className = "" } = props;
+export const PalAttrFull = function PalAttrFull_(props: IPalAttrProps) {
+  const { type, className = "", onClick } = props;
 
   const info = attrObj[type];
 
@@ -23,7 +23,10 @@ export const PalAttr = function PalAttr_(props: IPalAttrProps) {
   let left = rIndex * 24;
 
   return (
-    <Tooltip title={info.text}>
+    <div
+      className="flex border-[1px] p-[2px] rounded-sm text-sm items-center cursor-pointer bg-[var(--bg)]"
+      onClick={onClick}
+    >
       <div
         className={`c-pal-attr ${className}`}
         style={{
@@ -31,6 +34,7 @@ export const PalAttr = function PalAttr_(props: IPalAttrProps) {
           backgroundPositionX: `-${left}px`,
         }}
       ></div>
-    </Tooltip>
+      {info.text}
+    </div>
   );
 };

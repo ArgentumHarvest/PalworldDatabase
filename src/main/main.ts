@@ -77,4 +77,11 @@ app.on("ready", () => {
       isMax,
     });
   });
+
+  // 监听窗口置顶变化
+  mainWindow.on("always-on-top-changed", (event, isAlwaysOnTop) => {
+    store.statusView?.webContents.send("IS_ON_TOP", {
+      isAlwaysOnTop,
+    });
+  });
 });

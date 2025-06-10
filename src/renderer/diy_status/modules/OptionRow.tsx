@@ -7,6 +7,22 @@ export const OptionRow = observer(function OptionRow_() {
 
   const list = [
     {
+      icon: "icon-zhiding1",
+      text: "置顶",
+      className: logic.isTop ? "hidden" : "",
+      onClick: () => {
+        logic.resize("setAlwaysOnTop");
+      },
+    },
+    {
+      icon: "icon-zhiding",
+      text: "取消置顶",
+      className: logic.isTop ? "" : "hidden",
+      onClick: () => {
+        logic.resize("cancelSetAlwaysOnTop");
+      },
+    },
+    {
       icon: "icon-2zuixiaohua-1",
       text: "最小化",
       onClick: () => {

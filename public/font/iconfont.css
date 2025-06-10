@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4941824 */
-  src: url('iconfont.woff2?t=1749197942143') format('woff2');
+  src: url('iconfont.woff2?t=1749538887773') format('woff2');
 }
 
 .iconfont {
@@ -9,6 +9,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zhiding1:before {
+  content: "\e627";
+}
+
+.icon-zhiding:before {
+  content: "\e71a";
 }
 
 .icon-62tianjia:before {

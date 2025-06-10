@@ -12,6 +12,8 @@ export interface ILogic {
   rootStore: RootStore;
   /** @param 是否最大化 */
   isMax: boolean;
+  /** @param 是否置顶 */
+  isTop: boolean;
   /** @param 点击次数，达到7打开开发面板 */
   count: number;
   /** @param 定时器，超过500ms未点击重新计数 */
@@ -22,6 +24,8 @@ export interface ILogic {
   addCount(): void;
   /** @function 修改最大化 */
   changeIsMax(isMax: boolean): void;
+  /** @function 修改置顶 */
+  changeIsTop(isTop: boolean): void;
   /** @function 修改窗口大小 */
   resize(type: TResizeType): void;
   /** @function 关闭窗口 */
