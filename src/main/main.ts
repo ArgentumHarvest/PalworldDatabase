@@ -1,4 +1,4 @@
-import { app, BrowserWindow, desktopCapturer, session } from "electron";
+import { app, BrowserWindow } from "electron";
 import path from "path";
 import { IGloablStore } from "./interface.js";
 import { createStatusView, createView, windowResize } from "./tools/index.js";
@@ -68,14 +68,6 @@ app.on("ready", () => {
   autoUpdateApp();
   // 监听事件
   ipcServer(store);
-
-  // 设置捕获处理器
-  session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
-    desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
-      // 这里你可以选择指定的屏幕，比如 sources[0] 就是主屏幕
-      callback({ video: sources[0] });
-    });
-  });
 
   // 监听窗口大小变化
   mainWindow.on("resize", () => {

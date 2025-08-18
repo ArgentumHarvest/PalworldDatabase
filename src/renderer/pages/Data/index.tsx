@@ -1,18 +1,52 @@
-import { useState } from "react";
+import { Button, Image, Space } from "antd";
+import { useRef, useState } from "react";
 
 export const Page = function Page_() {
-  const [url, setUrl] = useState("");
+  const imgRef = useRef(new Map<string, string[]>());
+  const [urls, setUrls] = useState<string[]>([]);
+  const onDownload = (src: string) => {
+    const url = src;
+    const filename = Date.now() + ".png";
+
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(blobUrl);
+        link.remove();
+      });
+  };
+
   return (
-    <div>
-      <button
+    <div className="h-full overflow-y-auto p-4">
+      <Button
+        type="primary"
+        className="mb-2"
         onClick={async () => {
-          const imgBase64 = await window.api.captureScreen();
-          setUrl(imgBase64);
+          const imgs = await window.api.captureScreen();
+          setUrls((r) => [...r, ...imgs]);
         }}
       >
         截图
-      </button>
-      <div>{url ? <img src={url} /> : "没有获取到截图"}</div>
+      </Button>
+      <div className="flex flex-wrap gap-2">
+        {urls.map((item, index) => (
+          <div className=" relative" key={item}>
+            <Image key={item} src={item} width={200} />
+            <Button
+              onClick={() => onDownload(item)}
+              className=" absolute bottom-0 right-0"
+            >
+              下载
+            </Button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

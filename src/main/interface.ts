@@ -47,7 +47,7 @@ export interface IPreloadApi {
   /** @function 用于渲染进程监听主进程发出的消息 */
   receive: (channel: TIpcMianEventType, func: (...args: any) => void) => void;
   /** @function 截图 */
-  captureScreen: () => Promise<string>;
+  captureScreen: () => Promise<string[]>;
 }
 
 /** @type 主进程通知渲染进程的事件 */

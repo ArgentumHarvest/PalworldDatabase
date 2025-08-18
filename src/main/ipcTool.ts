@@ -1,4 +1,4 @@
-import { app, ipcMain } from "electron";
+import { app, desktopCapturer, ipcMain, session } from "electron";
 import { IGloablStore } from "./interface.js";
 import { addTab, changeTab, removeTab } from "./tools/index.js";
 
@@ -85,5 +85,35 @@ export const ipcServer = (store: IGloablStore) => {
     }
 
     changeTab(store, response.id);
+  });
+  // 获取所有屏幕源
+  ipcMain.handle("GET_SOURCES", async () => {
+    const sources = await desktopCapturer.getSources({ types: ["screen"] });
+    const output = sources.map((s) => ({ id: s.id, name: s.name }));
+    console.log(666, output);
+    return output;
+  });
+  // 初始化截图的屏幕
+  ipcMain.handle("SET_SOURCE", (event, response) => {
+    if (!response.id) {
+      return;
+    }
+    // 设置捕获处理器
+    session.defaultSession.setDisplayMediaRequestHandler(
+      (request, callback) => {
+        desktopCapturer.getSources({ types: ["screen"] }).then((sources) => {
+          let video = sources.find((r) => r.id === response.id);
+          if (!video) {
+            console.log("未检测到目标屏幕，已初始化为的第一个屏幕");
+            video = sources[0];
+          } else {
+            console.log(`当前屏幕已初始化为${response.id}`);
+          }
+          // 这里你可以选择指定的屏幕，比如 sources[0] 就是主屏幕
+          callback({ video });
+        });
+      }
+    );
+    return true;
   });
 };
