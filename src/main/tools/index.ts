@@ -1,4 +1,4 @@
-import { BrowserWindow, WebContentsView, app } from "electron";
+import { BrowserWindow, WebContentsView, app, desktopCapturer } from "electron";
 import { IGloablStore, IWebView } from "../interface.js";
 import { isDev } from "../utils.js";
 import path from "path";

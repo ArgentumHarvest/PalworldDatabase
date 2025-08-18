@@ -40,12 +40,14 @@ export interface IBrowserWindowRecord {
 }
 
 export interface IPreloadApi {
-  /** @param 渲染进程向主进程发送消息 */
+  /** @function 渲染进程向主进程发送消息 */
   send: (channel: TIpcEventType, ...args: any) => void;
-  /** @param 渲染进程向主进程发送消息 */
+  /** @function 渲染进程向主进程发送消息 */
   invoke: (channel: TIpcEventType, ...args: any) => any;
-  /** @param 用于渲染进程监听主进程发出的消息 */
+  /** @function 用于渲染进程监听主进程发出的消息 */
   receive: (channel: TIpcMianEventType, func: (...args: any) => void) => void;
+  /** @function 截图 */
+  captureScreen: () => Promise<string>;
 }
 
 /** @type 主进程通知渲染进程的事件 */
