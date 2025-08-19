@@ -24,7 +24,7 @@ export const Page = function Page_() {
 
   return (
     <div className="h-full overflow-y-auto p-4">
-      <div>0.0.4简单的更新测试</div>
+      <div>0.0.5简单的更新测试</div>
       <Button
         type="primary"
         className="mb-2"
