@@ -12,7 +12,7 @@ import { IGloablStore } from "./interface.js";
 const autoUpdater = Updater.autoUpdater;
 
 if (process.env.NODE_ENV === "development") {
-  autoUpdater.forceDevUpdateConfig = false;
+  autoUpdater.forceDevUpdateConfig = true;
 }
 
 // 打印更新相关的 log 到本地
