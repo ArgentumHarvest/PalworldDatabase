@@ -65,7 +65,7 @@ app.on("ready", () => {
   // 注册快捷键
   globalRegister(store);
   // 自动更新
-  autoUpdateApp(mainWindow);
+  autoUpdateApp(store);
   // 监听事件
   ipcServer(store);
 

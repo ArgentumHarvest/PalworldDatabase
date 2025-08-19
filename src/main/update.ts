@@ -7,8 +7,13 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import Updater from "electron-updater";
 import logger from "electron-log";
+import { IGloablStore } from "./interface.js";
 
 const autoUpdater = Updater.autoUpdater;
+
+if (process.env.NODE_ENV === "development") {
+  autoUpdater.forceDevUpdateConfig = false;
+}
 
 // 打印更新相关的 log 到本地
 logger.transports.file.maxSize = 1002430; // 10M
@@ -47,7 +52,7 @@ export function installUpdate() {
  * 自动更新的逻辑
  * @param mainWindow
  */
-export async function autoUpdateApp(mainWindow: BrowserWindow) {
+export async function autoUpdateApp(store: IGloablStore) {
   // 等待 3 秒再检查更新，确保窗口准备完成，用户进入系统
   await sleep(3000);
   // 下载更新
@@ -70,10 +75,21 @@ export async function autoUpdateApp(mainWindow: BrowserWindow) {
   });
   // 当有可用更新的时候触发。 更新将自动下载。
   autoUpdater.on("update-available", (info) => {
-    logger.info("检查到有更新");
+    logger.info("fund update");
     logger.info(info);
+    console.log(Date.now());
+    const AWindow = store.windowList.find((w) => w.id === store.activeWindow);
+    if (!AWindow) {
+      return;
+    }
+    logger.info("777window");
+    const AView = AWindow.viewList.find((v) => v.id === AWindow.activeView);
+    if (!AView) {
+      return;
+    }
+    logger.info("666AView");
     // 检查到可用更新，交由用户提示是否下载
-    mainWindow.webContents.send("UPDATE_AVAILABLE", info);
+    AView.view.webContents.send("UPDATE_AVAILABLE", info);
   });
   // 当没有可用更新的时候触发，其实就是啥也不用做
   autoUpdater.on("update-not-available", () => {
@@ -84,14 +100,30 @@ export async function autoUpdateApp(mainWindow: BrowserWindow) {
     logger.info(progress);
     // 计算下载百分比
     const downloadPercent = Math.round(progress.percent * 100) / 100;
+    const AWindow = store.windowList.find((w) => w.id === store.activeWindow);
+    if (!AWindow) {
+      return;
+    }
+    const AView = AWindow.viewList.find((v) => v.id === AWindow.activeView);
+    if (!AView) {
+      return;
+    }
     // 实时同步下载进度到渲染进程，以便于渲染进程显示下载进度
-    mainWindow.webContents.send("DOWNLOAD_PROGRESS", progress.percent);
+    AView.view.webContents.send("DOWNLOAD_PROGRESS", progress.percent);
   });
   // 在更新下载完成的时候触发。
   autoUpdater.on("update-downloaded", (res) => {
     logger.info("下载完毕！提示安装更新");
     logger.info(res);
+    const AWindow = store.windowList.find((w) => w.id === store.activeWindow);
+    if (!AWindow) {
+      return;
+    }
+    const AView = AWindow.viewList.find((v) => v.id === AWindow.activeView);
+    if (!AView) {
+      return;
+    }
     // 下载完成之后，弹出对话框提示用户是否立即安装更新
-    mainWindow.webContents.send("UPDATE_DOWNLOADED", res);
+    AView.view.webContents.send("UPDATE_DOWNLOADED", res);
   });
 }

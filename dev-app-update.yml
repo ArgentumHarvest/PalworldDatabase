@@ -1,0 +1,2 @@
+provider: generic
+url: http://localhost:9071/packages/win32/ # 这里放你的更新服务器地址

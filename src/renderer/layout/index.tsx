@@ -6,6 +6,7 @@ import { Modal } from "antd";
 export const Page = function Page_() {
   const navigate = useNavigate();
   useEffect(() => {
+    console.log(Date.now(), "开始检测更新");
     window.api.receive("UPDATE_AVAILABLE", (info: any) => {
       // 显示 UI 提示用户有更新可用
       console.log("update-available: ", info);
