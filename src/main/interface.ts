@@ -56,6 +56,12 @@ export type TIpcMianEventType =
   | "IS_MAXIMIZE"
   /** @param 是否置顶 */
   | "IS_ON_TOP"
+  /** @param 检测到版本更新 */
+  | "UPDATE_AVAILABLE"
+  /** @param 下载进度 */
+  | "DOWNLOAD_PROGRESS"
+  /** @param 更新完毕 */
+  | "UPDATE_DOWNLOADED"
   /** @param 视图tab变化 */
   | "VIEW_UPDATE";
 
@@ -73,5 +79,9 @@ export type TIpcEventType =
   | "ADD_VIEW"
   /** @param 关闭视图 */
   | "DELETE_VIEW"
+  /** @param 下载更新 */
+  | "DOWNLOAD_UPDATE"
+  /** @param 安装更新 */
+  | "INSTALL_UPDATE"
   /** @param 切换视图 */
   | "CHANGE_VIEW";

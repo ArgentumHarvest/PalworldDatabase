@@ -31,6 +31,10 @@ export const routes: IRouteItem[] = [
         path: "data",
         lazy: lazy(() => import("@/pages/Data")),
       },
+      {
+        path: "upgrade",
+        lazy: lazy(() => import("@/pages/Upgrade")),
+      },
     ],
   },
   {

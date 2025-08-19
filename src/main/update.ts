@@ -1,19 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable import/prefer-default-export */
-import { app, dialog } from 'electron';
-import { join } from 'path';
-import Updater from 'electron-updater';
-import logger from 'electron-log';
+// src/main/autoUpdater.js
+import { app, BrowserWindow, ipcMain } from "electron";
+import { join } from "path";
+import Updater from "electron-updater";
+import logger from "electron-log";
 
 const autoUpdater = Updater.autoUpdater;
 
 // 打印更新相关的 log 到本地
 logger.transports.file.maxSize = 1002430; // 10M
 logger.transports.file.format =
-  '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}';
+  "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}";
+// 1) 直接修改文件名（默认在 app.getPath("logs") 下）
+logger.transports.file.fileName = "auto-update.log";
+// 2) 如果你要自定义目录和文件，可以这样：
 logger.transports.file.resolvePathFn = () =>
-  join(app.getPath('logs'), 'auto-update.log');
+  join(app.getPath("logs"), "auto-update.log");
 
 async function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -24,47 +29,69 @@ async function sleep(ms: number) {
   });
 }
 
-export async function autoUpdateApp() {
+/**
+ * 用户确定是否下载更新
+ */
+export function downloadUpdate() {
+  autoUpdater.downloadUpdate();
+}
+
+/**
+ * 退出并安装更新
+ */
+export function installUpdate() {
+  autoUpdater.quitAndInstall();
+}
+
+/**
+ * 自动更新的逻辑
+ * @param mainWindow
+ */
+export async function autoUpdateApp(mainWindow: BrowserWindow) {
   // 等待 3 秒再检查更新，确保窗口准备完成，用户进入系统
   await sleep(3000);
+  // 下载更新
+  ipcMain.on("DOWNLOAD_UPDATE", async () => {
+    downloadUpdate();
+  });
+
+  // 安装更新
+  ipcMain.on("INSTALL_UPDATE", async () => {
+    installUpdate();
+  });
   // 每次启动自动更新检查更新版本
   autoUpdater.checkForUpdates();
   autoUpdater.logger = logger;
   autoUpdater.disableWebInstaller = false;
   // 这个写成 false，写成 true 时，可能会报没权限更新
   autoUpdater.autoDownload = false;
-  autoUpdater.on('error', (error) => {
-    logger.error(['检查更新失败', error]);
+  autoUpdater.on("error", (error) => {
+    logger.error(["检查更新失败", error]);
   });
   // 当有可用更新的时候触发。 更新将自动下载。
-  autoUpdater.on('update-available', (info) => {
-    logger.info('检查到有更新，开始下载新版本');
-    const { version } = info;
-    logger.info(`最新版本为： ${version}`);
-    // 这里做的是检测到更新，直接就下载
-    autoUpdater.downloadUpdate();
+  autoUpdater.on("update-available", (info) => {
+    logger.info("检查到有更新");
+    logger.info(info);
+    // 检查到可用更新，交由用户提示是否下载
+    mainWindow.webContents.send("UPDATE_AVAILABLE", info);
   });
   // 当没有可用更新的时候触发，其实就是啥也不用做
-  autoUpdater.on('update-not-available', () => {
-    logger.info('没有可用更新');
+  autoUpdater.on("update-not-available", () => {
+    logger.info("没有可用更新");
   });
   // 下载更新包的进度，可以用于显示下载进度与前端交互等
-  autoUpdater.on('download-progress', async (progress) => {
+  autoUpdater.on("download-progress", async (progress) => {
     logger.info(progress);
+    // 计算下载百分比
+    const downloadPercent = Math.round(progress.percent * 100) / 100;
+    // 实时同步下载进度到渲染进程，以便于渲染进程显示下载进度
+    mainWindow.webContents.send("DOWNLOAD_PROGRESS", progress.percent);
   });
   // 在更新下载完成的时候触发。
-  autoUpdater.on('update-downloaded', (res) => {
-    logger.info('下载完毕, 提示安装更新', res);
-    // 这里需要注意，Electron.dialog 想要使用，必须在 BrowserWindow 创建之后
-    dialog
-      .showMessageBox({
-        title: '更新应用',
-        message: '已为您下载最新应用，点击确定马上替换为最新版本！',
-      })
-      .then(() => {
-        logger.info('退出应用，安装开始！');
-        // 重启应用并在下载后安装更新，它只应在发出 update-downloaded 这个事件后方可被调用。
-        autoUpdater.quitAndInstall();
-      });
+  autoUpdater.on("update-downloaded", (res) => {
+    logger.info("下载完毕！提示安装更新");
+    logger.info(res);
+    // 下载完成之后，弹出对话框提示用户是否立即安装更新
+    mainWindow.webContents.send("UPDATE_DOWNLOADED", res);
   });
 }

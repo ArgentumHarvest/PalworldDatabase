@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "@mobx/index";
 import { ILogic, TLoadingStore } from "./interface";
 import { GlobalStore } from "./";
+import { Modal } from "antd";
 
 export class Logic implements ILogic {
   loadingStore: TLoadingStore;
